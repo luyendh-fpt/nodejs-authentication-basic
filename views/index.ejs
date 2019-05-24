@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+    <%
+      if(username){
+    %>
+    <p>Hello <%= fullName%> - <%=username%> <img src="http://res.cloudinary.com/xuanhung2401/image/upload/c_pad,w_100,h_100/<%=avatarUrl%>" alt=""></p>
+    <p>(<a href="/members/logout">Logout</a>)</p>
+    <%
+      }
+    %>
+    <a href="/members/login">Login</a> &nbsp;
+    <a href="/members/register">Register</a>
+  </body>
+</html>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Member register</h1>
+    <form action="/members/register" method="post">
+        <div>
+            Username <input type="text" name="username">
+        </div>
+        <div>
+            Pass <input type="password" name="password">
+        </div>
+        <div>
+            Confirm Pass <input type="password" name="confirmPassword">
+        </div>
+        <div>
+            Fullname <input type="text" name="fullName">
+        </div>
+        <div>
+            AvatarUrl <input type="text" name="avatarUrl">
+            <input type="file" name="image">
+            <img src="" alt="" id="image-preview" style="width: 100px">
+        </div>
+        <div>
+            <input type="submit" value="Submit">
+            <input type="reset" value="Reset">
+        </div>
+    </form>
+
+    <script>
+        const cloudName = 'xuanhung2401';
+        const unsignedUploadPreset = 'phlw547y';
+        var img = document.querySelector('[name="image"]');
+        img.onchange = function () {
+            var file = this.files[0];
+            var url = `https://api.cloudinary.com/v1_1/${cloudName}/upload`;
+
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var responseDataJson = JSON.parse(this.responseText);
+                    console.log(responseDataJson);
+                    var imageUrl = document.querySelector('input[name="avatarUrl"]');
+                    imageUrl.value = responseDataJson.public_id;
+                    document.getElementById('image-preview').src = responseDataJson.url;
+                }
+            }
+            xhr.open('POST', url, true);
+            var fd = new FormData();
+            fd.append('upload_preset', unsignedUploadPreset);
+            fd.append('tags', 'browser_upload');
+            fd.append('file', file);
+            xhr.send(fd);
+        }
+    </script>
+</body>
+</html>
