@@ -4,6 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var session = require('express-session');
+var authorize = require('./routes/authentication');
+var permit = require('./routes/permission');
 
 const mongoose = require('mongoose');
 mongoose.connect('mongodb+srv://root:abcD1234@cluster0-wuil3.mongodb.net/test?retryWrites=true', { useNewUrlParser: true });
@@ -27,9 +29,13 @@ app.use(session({
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(authorize);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/members', membersRouter);
+app.use('/admin', permit('admin'), function (req, resp) {
+    resp.send('Okie Admin');
+})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

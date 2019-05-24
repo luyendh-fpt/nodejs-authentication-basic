@@ -38,7 +38,6 @@ exports.processLogin = function (req, resp) {
     });
 }
 
-
 exports.processLogout = function (req, resp) {
     req.session.destroy(function (err) {
         return resp.redirect('/');
