@@ -33,6 +33,7 @@ exports.processLogin = function (req, resp) {
             req.session.username = member.username;
             req.session.avatarUrl = member.avatarUrl;
             req.session.fullName = member.fullName;
+            req.session.role = 'user';
             resp.redirect('/');
         }
     });

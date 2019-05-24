@@ -4,7 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var session = require('express-session');
-var authorize = require('./routes/authentication');
+var authenticate = require('./routes/authentication');
 var permit = require('./routes/permission');
 
 const mongoose = require('mongoose');
@@ -24,18 +24,37 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+
+
 app.use(session({
     secret: 'nodejs'
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(authorize);
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use(authenticate);
+
+// app.use('/', indexRouter);
+// app.use('/users', usersRouter);
 app.use('/members', membersRouter);
+
+app.use('/free', function (req, resp) {
+    console.log('Free space.');
+    resp.send('Free space');
+});
+
+app.use('/user', permit('user', 'admin'), function (req, resp, next) {
+    console.log('Logged in user permission.');
+    resp.send('Logged in user permission.' + req.loggedInMember.role);
+});
+
 app.use('/admin', permit('admin'), function (req, resp) {
-    resp.send('Okie Admin');
-})
+    console.log('Logged in admin permission.');
+    resp.send('Logged in admin permission.' + req.loggedInMember.role);
+});
+// app.use('/admin', permit('admin'), function (req, resp) {
+//     resp.send('Okie Admin');
+// })
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

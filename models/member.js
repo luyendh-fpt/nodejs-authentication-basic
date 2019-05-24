@@ -24,6 +24,9 @@ var MemberSchema = new mongoose.Schema({
     },
     avatarUrl: {
         type: String
+    },
+    role: {
+        type: String
     }
 });
 
